@@ -2,12 +2,12 @@ package by.itacademy.javaenterprise.knyazev.dao;
 
 import java.util.List;
 
-import by.itacademy.javaenterprise.knyazev.dao.exceptions.ExceptionDAO;
+import by.itacademy.javaenterprise.knyazev.dao.exceptions.DAOException;
 
 public interface DAO<T> {
-	Long save(T object) throws ExceptionDAO;
-	T find(Long id) throws ExceptionDAO;
-	List<T>findAll() throws ExceptionDAO;
-	void update(T object) throws ExceptionDAO;
-	void delete(T object) throws ExceptionDAO;
+	Long save(T object) throws DAOException;
+	T find(Long id) throws DAOException;
+	List<T>findAll();
+	void update(T object) throws DAOException;
+	void delete(T object) throws DAOException;
 }

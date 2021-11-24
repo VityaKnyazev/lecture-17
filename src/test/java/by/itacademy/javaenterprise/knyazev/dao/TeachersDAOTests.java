@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import by.itacademy.javaenterprise.knyazev.dao.exceptions.TeacherExceptionDAO;
+import by.itacademy.javaenterprise.knyazev.dao.exceptions.DAOException;
 import by.itacademy.javaenterprise.knyazev.entities.Teacher;
 
 public class TeachersDAOTests {
@@ -31,7 +31,7 @@ public class TeachersDAOTests {
 	}
 
 	@Test
-	public void whenSaveTeacher() throws TeacherExceptionDAO {
+	public void whenSaveTeacher() throws DAOException {
 		Teacher teacher = new Teacher();
 		teacher.setId(25L);
 
@@ -49,11 +49,11 @@ public class TeachersDAOTests {
 
 		Mockito.when(entityManagerMock.getTransaction()).thenReturn(entityTransactionMock);
 
-		assertThrows(TeacherExceptionDAO.class, () -> teachersDAO.save(null), "TeacherExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teachersDAO.save(null), "DAOException was expected");
 	}
 
 	@Test
-	public void whenSaveThrowEntityExistsException() throws TeacherExceptionDAO {
+	public void whenSaveThrowEntityExistsException() throws DAOException {
 
 		Teacher teacher = new Teacher();
 
@@ -67,7 +67,7 @@ public class TeachersDAOTests {
 	}
 
 	@Test
-	public void whenSaveThrowIllegalArgumentException() throws TeacherExceptionDAO {
+	public void whenSaveThrowIllegalArgumentException() throws DAOException {
 
 		Teacher teacher = new Teacher();
 
@@ -81,7 +81,7 @@ public class TeachersDAOTests {
 	}
 
 	@Test
-	public void whenSaveThrowTransactionRequiredException() throws TeacherExceptionDAO {
+	public void whenSaveThrowTransactionRequiredException() throws DAOException {
 
 		Teacher teacher = new Teacher();
 
@@ -96,7 +96,7 @@ public class TeachersDAOTests {
 	}
 
 	@Test
-	public void whenFindTeacher() throws TeacherExceptionDAO {
+	public void whenFindTeacher() throws DAOException {
 		Teacher teacher = new Teacher();
 		teacher.setId(9L);
 
@@ -109,18 +109,18 @@ public class TeachersDAOTests {
 
 	@Test
 	public void whenFindTeacherOnNull() {
-		assertThrows(TeacherExceptionDAO.class, () -> teachersDAO.find(null), "TeacherExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teachersDAO.find(null), "DAOException was expected");
 	}
 
 	@Test
 	public void whenFindTeacherOnIdBelowZero() {
 		Long idForQuery = -12L;
 
-		assertThrows(TeacherExceptionDAO.class, () -> teachersDAO.find(idForQuery), "TeacherExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teachersDAO.find(idForQuery), "DAOException was expected");
 	}
 
 	@Test
-	public void whenFindTeacherTrowIllegalArgumentException() throws TeacherExceptionDAO {
+	public void whenFindTeacherTrowIllegalArgumentException() throws DAOException {
 		Long idForQuery = 135666L;
 
 		Mockito.when(entityManagerMock.find(Mockito.<Class<Teacher>>any(), Mockito.eq(idForQuery)))

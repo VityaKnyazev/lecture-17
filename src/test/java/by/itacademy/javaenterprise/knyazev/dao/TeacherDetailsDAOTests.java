@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
@@ -23,8 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import by.itacademy.javaenterprise.knyazev.dao.exceptions.TeacherDetailsExceptionDAO;
-import by.itacademy.javaenterprise.knyazev.entities.Teacher;
+import by.itacademy.javaenterprise.knyazev.dao.exceptions.DAOException;
 import by.itacademy.javaenterprise.knyazev.entities.TeacherDetails;
 
 public class TeacherDetailsDAOTests {
@@ -45,7 +43,7 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenSaveTeacherDetails() throws TeacherDetailsExceptionDAO {
+	public void whenSaveTeacherDetails() throws DAOException {
 		TeacherDetails teacherDetails = new TeacherDetails();
 		teacherDetails.setId(18L);
 		
@@ -63,11 +61,11 @@ public class TeacherDetailsDAOTests {
 		
 		Mockito.when(entityManagerMock.getTransaction()).thenReturn(entityTransactionMock);
 					
-		assertThrows(TeacherDetailsExceptionDAO.class, () -> teacherDetailsDAO.save(null), "TeacherDetailsExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teacherDetailsDAO.save(null), "DAOException was expected");
 	}
 	
 	@Test
-	public void whenSaveThrowEntityExistsException() throws TeacherDetailsExceptionDAO {
+	public void whenSaveThrowEntityExistsException() throws DAOException {
 				
 		TeacherDetails teacherDetails = new TeacherDetails();
 		
@@ -82,7 +80,7 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenSaveTrowIllegalArgumentException() throws TeacherDetailsExceptionDAO {
+	public void whenSaveTrowIllegalArgumentException() throws DAOException {
 				
 		TeacherDetails teacherDetails = new TeacherDetails();
 		
@@ -96,7 +94,7 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenSaveThrowTransactionRequiredException() throws TeacherDetailsExceptionDAO {
+	public void whenSaveThrowTransactionRequiredException() throws DAOException {
 				
 		TeacherDetails teacherDetails = new TeacherDetails();
 		
@@ -110,7 +108,7 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenFindTeacherDetails() throws TeacherDetailsExceptionDAO {
+	public void whenFindTeacherDetails() throws DAOException {
 		TeacherDetails teacherDetails = new TeacherDetails();
 		teacherDetails.setId(5L);
 		
@@ -122,20 +120,20 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenFindTeacherDetailsOnNull() throws TeacherDetailsExceptionDAO {
+	public void whenFindTeacherDetailsOnNull() throws DAOException {
 		
-		assertThrows(TeacherDetailsExceptionDAO.class, () -> teacherDetailsDAO.find(null), "TeacherDetailsExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teacherDetailsDAO.find(null), "DAOException was expected");
 	}
 	
 	@Test
 	public void whenFindTeacherOnIdBelowZero() {
 		Long idForQuery = -1L;
 		
-		assertThrows(TeacherDetailsExceptionDAO.class, () -> teacherDetailsDAO.find(idForQuery), "TeacherDetailsExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teacherDetailsDAO.find(idForQuery), "DAOException was expected");
 	}
 	
 	@Test
-	public void whenFindTeacherTrowIllegalArgumentException() throws TeacherDetailsExceptionDAO {
+	public void whenFindTeacherTrowIllegalArgumentException() throws DAOException {
 		Long idForQuery = 12566L;
 		
 		Mockito.when(entityManagerMock.find(Mockito.<Class<TeacherDetails>>any(), Mockito.eq(idForQuery))).thenThrow(IllegalArgumentException.class);
@@ -143,17 +141,15 @@ public class TeacherDetailsDAOTests {
 		assertNull(teacherDetailsDAO.find(idForQuery));
 	}
 	
-	//TODO THIS IS SECOND PART
 	@Test
-	public void whenFindAll() throws TeacherDetailsExceptionDAO {
+	public void whenFindAll() {
 		List<TeacherDetails> teachersDetails = new ArrayList<>();
 		teachersDetails.add(new TeacherDetails());
 		teachersDetails.stream().forEach(t -> {
 			t.setId(5L);
-			t.setEMail("Teacher@mail.ru");
+			t.setEmail("Teacher@mail.ru");
 			t.setSubject("Math");
 			t.setSchoolNumber(18);
-			t.setTeacher(new Teacher());
 		});
 		
 		Mockito.when(entityManagerMock.createNamedQuery(Mockito.anyString(), Mockito.eq(TeacherDetails.class))).thenReturn(typedQueryMock);
@@ -163,16 +159,7 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenFindAllThrowTeacherDetailsExceptionDAO() {
-		List<TeacherDetails> teachersDetails = new ArrayList<>();
-		
-		Mockito.when(entityManagerMock.createNamedQuery(Mockito.anyString(), Mockito.eq(TeacherDetails.class))).thenReturn(typedQueryMock);
-		Mockito.when(typedQueryMock.getResultList()).thenReturn(teachersDetails);
-		assertThrows(TeacherDetailsExceptionDAO.class, () -> teacherDetailsDAO.findAll(), "TeacherDetailsExceptionDAO was expected");
-	}
-	
-	@Test
-	public void whenFindAllThrowIllegalStateException() throws TeacherDetailsExceptionDAO {
+	public void whenFindAllThrowIllegalStateException() {
 		Mockito.when(entityManagerMock.createNamedQuery(Mockito.anyString(), Mockito.eq(TeacherDetails.class))).thenReturn(typedQueryMock);
 		Mockito.when(typedQueryMock.getResultList()).thenThrow(new IllegalStateException());
 		
@@ -182,7 +169,7 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenFindAllThrowIllegalArgumentException() throws TeacherDetailsExceptionDAO {
+	public void whenFindAllThrowIllegalArgumentException() {
 		Mockito.when(entityManagerMock.createNamedQuery(Mockito.anyString(), Mockito.eq(TeacherDetails.class))).thenThrow(IllegalArgumentException.class);
 		
 		assertEquals(true, teacherDetailsDAO.findAll().isEmpty());
@@ -190,7 +177,7 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenFindAllThrowPersistenceException() throws TeacherDetailsExceptionDAO {
+	public void whenFindAllThrowPersistenceException() {
 		Mockito.when(entityManagerMock.createNamedQuery(Mockito.anyString(), Mockito.eq(TeacherDetails.class))).thenReturn(typedQueryMock);
 		Mockito.when(typedQueryMock.getResultList()).thenThrow(PersistenceException.class);
 		
@@ -209,12 +196,12 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenUpdateThrowTeacherDetailsExceptionDAO() {
+	public void whenUpdateThrowDAOException() {
 		TeacherDetails td = new TeacherDetails();
 		Mockito.when(entityManagerMock.getTransaction()).thenReturn(entityTransactionMock);
 		Mockito.when(entityManagerMock.merge(Mockito.eq(td))).thenThrow(PersistenceException.class);
 		
-		assertThrows(TeacherDetailsExceptionDAO.class, () -> teacherDetailsDAO.update(td), "TeacherDetailsExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teacherDetailsDAO.update(td), "DAOException was expected");
 		Mockito.verify(entityManagerMock, times(1)).merge(Mockito.eq(td));
 	}
 	
@@ -228,12 +215,12 @@ public class TeacherDetailsDAOTests {
 	}
 	
 	@Test
-	public void whenDeleteThrowTeacherDetailsExceptionDAO() {
+	public void whenDeleteThrowDAOException() {
 		TeacherDetails td = new TeacherDetails();
 		Mockito.when(entityManagerMock.getTransaction()).thenReturn(entityTransactionMock);
 		Mockito.doThrow(IllegalArgumentException.class).when(entityManagerMock).remove(Mockito.eq(td));
 		
-		assertThrows(TeacherDetailsExceptionDAO.class, () -> teacherDetailsDAO.delete(td), "TeacherDetailsExceptionDAO was expected");
+		assertThrows(DAOException.class, () -> teacherDetailsDAO.delete(td), "DAOException was expected");
 		Mockito.verify(entityManagerMock, times(1)).remove(Mockito.eq(td));
 	}
 }

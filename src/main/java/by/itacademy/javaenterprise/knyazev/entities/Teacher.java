@@ -7,7 +7,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
@@ -23,8 +22,6 @@ public class Teacher {
 	@Column(nullable = false)
 	private int age;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "teacher_details_id")
-	private TeacherDetails teacherDetails;		
-	
+	@OneToOne(mappedBy = "teacher", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private TeacherDetails teacherDetails;			
 }

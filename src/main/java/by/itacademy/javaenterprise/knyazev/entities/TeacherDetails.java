@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -22,11 +23,12 @@ public class TeacherDetails {
 	@Column(nullable = false)
 	private String subject;	
 	@Column(nullable = false)
-	private String eMail;
+	private String email;
 	
 	@Column(name = "school_number", nullable = false)
 	private int schoolNumber;	
 	
-	@OneToOne(mappedBy = "teacherDetails", fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+	@JoinColumn(name = "teacher_id", nullable = false)
 	private Teacher teacher;
 }

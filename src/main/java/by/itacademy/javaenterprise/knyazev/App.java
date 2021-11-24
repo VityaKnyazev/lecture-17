@@ -12,7 +12,7 @@ public class App {
 	public static void main(String[] args) {
 		Long id = 2L;
 
-		TeachersDAO teachersDAO = new TeachersDAO(JpaUtil.getInstance().getEntityManager());
+		TeachersDAO teachersDAO = new TeachersDAO(JpaUtil.getEntityManager());
 		informationService = new InformationService(teachersDAO);
 
 		saveTeacherInfo();
@@ -20,19 +20,22 @@ public class App {
 		updateTeacherInfo();
 		deleteTeacherInfo();
 
-		teachersDAO.closeEntityManager();
-		JpaUtil.getInstance().closeEntityManagerFactory();
+		teachersDAO.close();
+		JpaUtil.closeEntityManagerFactory();
 	}
 
 	public static void saveTeacherInfo() {
 		Teacher teacher = new Teacher();
-		teacher.setName("Ленок");
+		teacher.setName("Аленка");
 		teacher.setAge(22);
-		teacher.setTeacherDetails(new TeacherDetails());
-
-		teacher.getTeacherDetails().setSubject("Биология");
-		teacher.getTeacherDetails().setSchoolNumber(18);
-		teacher.getTeacherDetails().setEMail("lenok@mail.ru");
+		
+		TeacherDetails teacherDetails = new TeacherDetails();
+		teacherDetails.setSubject("Биология");
+		teacherDetails.setSchoolNumber(18);
+		teacherDetails.setEmail("lenok@mail.ru");
+		
+		teacher.setTeacherDetails(teacherDetails);
+		teacherDetails.setTeacher(teacher);
 
 		informationService.saveTeacher(teacher);
 	}
